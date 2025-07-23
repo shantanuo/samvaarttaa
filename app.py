@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-client = genai.Client(api_key=st.secrets["gemini_api_key"])
+client = genai.Client(api_key="AIzaSyDzgs5eDsMYrgSBTnJYWij_6qBW2OLj36g")
 
 st.title("संवार्त्ता")
 st.markdown(
