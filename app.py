@@ -38,7 +38,7 @@ with st.form("input_form"):
             st.session_state.input_text = DEMO_INPUT
 
     input_text = st.text_area(
-        "Enter a detailed news article for best results. Or click on the above button for sample text**_Always proofread before publishing_**.",
+        "Enter a detailed news article for best results. Or click the button for sample text  **_Always proofread before publishing_**.",
         height=300,
         key="input_text"
     )
