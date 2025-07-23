@@ -7,7 +7,7 @@ from datetime import datetime
 #from email.mime.text import MIMEText
 
 # Initialize Google GenAI client
-client = genai.Client(api_key=st.secrets["gemini_api_key"])
+client = genai.Client(api_key="AIzaSyDzgs5eDsMYrgSBTnJYWij_6qBW2OLj36g")
 
 # Email configuration for usage logs
 #EMAIL_SENDER = st.secrets.get("email_sender", "your-email@gmail.com")
