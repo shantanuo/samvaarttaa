@@ -107,11 +107,14 @@ with st.form("input_form"):
     # Action buttons (Clear, Demo, Submit) side by side
     col1, col2, col3 = st.columns([1, 1, 2])
     with col1:
-        clear_clicked = st.form_submit_button("❌", key="clear_button")
+        if st.form_submit_button("❌"):
+            st.session_state.input_text = ""
     with col2:
-        demo_clicked = st.form_submit_button("Demo", key="demo_button")
+        if st.form_submit_button("Demo"):
+            st.session_state.input_text = DEMO_INPUT
     with col3:
         submitted = st.form_submit_button("Submit")
+
 
     # Handle button actions
     if clear_clicked:
