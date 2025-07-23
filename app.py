@@ -38,7 +38,7 @@ Provide just the translation without any other extra introductory text."""
 # Demo input
 DEMO_INPUT = """On July 19, 2025, CoinDCX, one of Indiaâ€™s largest crypto exchanges, suffered a major hack resulting in a loss of about $44.2 million. The breach targeted an internal wallet used by CoinDCX for liquidity with a partner exchange and did not affect any customer funds, which remain safe in cold storage. Blockchain investigators like ZachXBT uncovered the hack before CoinDCX made it public, noting the hacker used a sophisticated server-side attack and laundered the funds by moving them from Solana to Ethereum and using Tornado Cash. CoinDCX has drawn some criticism for a 17-hour delay in disclosing the breach, especially since the compromised wallet was not part of the exchangeâ€™s published proof-of-reserves. In response, the company froze all impacted systems, engaged third-party security experts, and has covered the losses using its own treasury to ensure normal trading and withdrawals. CEO Sumit Gupta assured users that all customer holdings are safe, and the company has launched a bug bounty to strengthen future security while cooperating with authorities. This incident, the second major Indian exchange hack within a year, has intensified scrutiny on how centralized crypto platforms handle security and crisis management."""
 
-st.title("à¤¸à¤‚à¤µà¤¾à¤°à¥à¤¤à¥à¤¤à¤¾")
+st.title("संवार्त्ता")
 st.markdown(
     """
     ### Disclaimers: 
