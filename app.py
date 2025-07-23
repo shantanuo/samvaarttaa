@@ -25,17 +25,8 @@ DEMO_INPUT = """On July 19, 2025, CoinDCX, one of India’s largest crypto excha
 
 st.title("Sanskrit News Generator")
 
-# Input form (moved to top)
+# Input form (at top)
 with st.form("input_form"):
-    # Action buttons with icons above input box (Paste button removed)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.form_submit_button("❌"):
-            st.session_state.input_text = ""
-    with col2:
-        if st.form_submit_button("📄"):
-            st.session_state.input_text = DEMO_INPUT
-
     input_text = st.text_area(
         "Enter a detailed news article for best results. **_Always proofread before publishing_**.",
         height=300,
@@ -47,7 +38,16 @@ with st.form("input_form"):
     if len(input_text) > 5000:
         st.warning("Input is very long. Consider shortening it for better performance.")
 
-    submitted = st.form_submit_button("Submit")
+    # Action buttons (Clear, Demo, Submit) side by side
+    col1, col2, col3 = st.columns([1, 1, 2])
+    with col1:
+        if st.form_submit_button("❌"):
+            st.session_state.input_text = ""
+    with col2:
+        if st.form_submit_button("Demo"):
+            st.session_state.input_text = DEMO_INPUT
+    with col3:
+        submitted = st.form_submit_button("Submit")
 
 # Collapsible disclaimers
 with st.expander("Disclaimers"):
@@ -113,7 +113,7 @@ if submitted:
                 # Log usage analytics
                 usage_log = f"Submission at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 st.session_state.usage_logs.append(usage_log)
-                # send_email("Sanskrit News Generator Usage Log", usage_log)
+                #send_email("Sanskrit News Generator Usage Log", usage_log)
                 
                 # Display output in vertically scrollable box
                 st.markdown("### Output")
@@ -137,7 +137,6 @@ if submitted:
             st.error(f"Error generating translation: {str(e)}")
             if "rate limit" in str(e).lower():
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
-
 
 # Feedback request
 st.markdown("---")
