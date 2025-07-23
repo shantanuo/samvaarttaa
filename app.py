@@ -32,6 +32,7 @@ with st.form("input_form"):
     with col1:
         if st.form_submit_button("❌"):
             st.session_state.input_text = ""
+    with col2:
         if st.form_submit_button("📄"):
             st.session_state.input_text = DEMO_INPUT
 
