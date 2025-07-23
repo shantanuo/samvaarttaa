@@ -117,9 +117,7 @@ with st.form("input_form"):
 
 
     # Handle button actions
-    if clear_clicked:
-        st.session_state.input_text = ""
-    elif demo_clicked:
+    if demo_clicked:
         with st.spinner("Loading demo article..."):
             st.session_state.input_text = DEMO_INPUT
     elif submitted:
