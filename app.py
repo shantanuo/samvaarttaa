@@ -117,10 +117,7 @@ with st.form("input_form"):
 
 
     # Handle button actions
-    if demo_clicked:
-        with st.spinner("Loading demo article..."):
-            st.session_state.input_text = DEMO_INPUT
-    elif submitted:
+    if submitted:
         if not input_text.strip():
             st.error("Please enter a valid news article.")
         else:
