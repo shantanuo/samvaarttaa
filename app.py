@@ -32,7 +32,6 @@ with st.form("input_form"):
     with col1:
         if st.form_submit_button("❌"):
             st.session_state.input_text = ""
-    with col2:
         if st.form_submit_button("📄"):
             st.session_state.input_text = DEMO_INPUT
 
@@ -137,6 +136,7 @@ if submitted:
             st.error(f"Error generating translation: {str(e)}")
             if "rate limit" in str(e).lower():
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
+
 
 # Feedback request
 st.markdown("---")
