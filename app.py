@@ -145,17 +145,6 @@ if submitted:
             if "rate limit" in str(e).lower():
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
 
-# Display cached output if available
-if "output" in st.session_state:
-    st.markdown("### Output")
-    st.write(f"```\n{st.session_state.output}\n```")
-    st.download_button(
-        label="Download Output",
-        data=st.session_state.output,
-        file_name="sanskrit_translation.txt",
-        mime="text/plain",
-        key="download_cached"
-    )
 
 # Feedback request
 st.markdown("---")
