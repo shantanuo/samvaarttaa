@@ -1,2 +1,4 @@
 google-genai
 streamlit
+pyperclip 
+streamlit-ace
