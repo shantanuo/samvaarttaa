@@ -89,7 +89,7 @@ def generate_sanskrit_translation(input_text, system_instruction):
 # Function to send email for usage logs
 def send_email(subject, body):
     try:
-        msg = MIMEText(body)
+        msg = Text(body)
         msg["Subject"] = subject
         msg["From"] = EMAIL_SENDER
         msg["To"] = EMAIL_RECEIVER
@@ -114,7 +114,7 @@ if submitted:
                 # Log usage analytics
                 usage_log = f"Submission at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 st.session_state.usage_logs.append(usage_log)
-                send_email("Sanskrit News Generator Usage Log", usage_log)
+                #send_email("Sanskrit News Generator Usage Log", usage_log)
                 
                 # Display output in vertically scrollable box
                 st.markdown("### Output")
