@@ -4,7 +4,7 @@ from google.genai import types
 from datetime import datetime
 
 # Initialize Google GenAI client
-client = genai.Client(api_key="AIzaSyDzgs5eDsMYrgSBTnJYWij_6qBW2OLj36g")
+client = genai.Client(api_key="AIzaSyBjWuEC1ehWpif7S9XXCDWmdN5XInCXxFo")
 
 
 # System instruction (default)
