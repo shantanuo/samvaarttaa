@@ -99,12 +99,17 @@ with st.expander("View/Edit Prompt"):
 # Cache API responses
 @st.cache_data(show_spinner=False)  # Suppress "Running generate_sanskrit_translation(...)" message
 def generate_sanskrit_translation(input_text, system_instruction):
-    api_response = client.models.generate_content(
-        model="gemini-2.5-pro",
-        config=types.GenerateContentConfig(system_instruction=system_instruction),
-        contents=input_text,
-    )
-    parts = api_response.candidates[0].content.parts
+    try:
+        api_response = client.models.generate_content(
+            model="gemini-2.5-pro",
+            config=types.GenerateContentConfig(system_instruction=system_instruction),
+            contents=input_text,
+        )
+        parts = api_response.candidates[0].content.parts
+    except Exception as e:
+        st.error("An error occurred!")
+        st.exception(e)  # shows full traceback in the app
+
     return "".join(part.text for part in parts)
 
 # Function to send email for usage logs
