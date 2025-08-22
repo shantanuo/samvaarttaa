@@ -122,14 +122,26 @@ if submitted:
                     api_key_to_use=api_key
                 )
                 
+                # --- CHANGE IS HERE ---
+                # Create a display string for the API key to avoid showing the full key
+                key_display_string = f"DEBUG INFO: Key Used: {api_key[:5]}...{api_key[-4:]}"
+                
+                # Prepend the debug info to the response
+                final_output = f"{key_display_string}\n\n---\n\n{response}"
+                
+                # Display the combined output
                 st.markdown("### Output")
-                st.text_area("Generated Sanskrit Text", response, height=400)
+                st.text_area("Generated Sanskrit Text", final_output, height=400)
+                
+                # Make the combined output available for download
                 st.download_button(
                     label="Download Output",
-                    data=response,
+                    data=final_output,
                     file_name="sanskrit_translation.txt",
                     mime="text/plain"
                 )
+                # --- END OF CHANGE ---
+
         except Exception as e:
             st.error(f"An error occurred while generating the translation: {str(e)}")
             if "api_key" in str(e).lower():
