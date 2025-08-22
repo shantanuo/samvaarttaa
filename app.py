@@ -3,9 +3,9 @@ from google import genai
 from google.genai import types
 from datetime import datetime
 
-# --- START OF CHANGES ---
+# --- START OF MODIFICATIONS ---
 
-# Add a sidebar for the user to enter their API key
+# 1. Add a sidebar input for the user's API key
 st.sidebar.title("Configuration")
 user_api_key = st.sidebar.text_input(
     "Your Google API Key (Optional)",
@@ -13,18 +13,17 @@ user_api_key = st.sidebar.text_input(
     help="If you provide your own key, it will be used instead of the app's default key."
 )
 
-# Determine which API key to use
-api_key_to_use = None
-if user_api_key:
-    api_key_to_use = user_api_key
-    st.sidebar.success("Using your provided API key.")
-elif "google_key" in st.secrets:
-    api_key_to_use = st.secrets['google_key']
+# 2. Determine which API key to use
+# If the user provides a key, use it. Otherwise, use the one from secrets.
+api_key_to_use = user_api_key if user_api_key else st.secrets.get('google_key')
 
-# The global client initialization is removed from here.
-# It will be created dynamically later.
-
-# --- END OF CHANGES ---
+# 3. Initialize the Google GenAI client using the selected key
+# This will only succeed if api_key_to_use is not None.
+client = None
+if api_key_to_use:
+    if user_api_key:
+        st.sidebar.success("Using your provided API key.")
+    client = genai.Client(api_key=api_key_to_use)
 
 
 # System instruction (default)
@@ -96,42 +95,58 @@ with st.expander("View/Edit Prompt"):
     )
 
 # Cache API responses
-@st.cache_data(show_spinner=False)
-def generate_sanskrit_translation(input_text, system_instruction, api_key):
-    # --- CHANGE: Client is now created inside the function with the provided key ---
-    client = genai.Client(api_key=api_key)
-    api_response = client.get_generative_model(
-        model='gemini-1.5-pro-latest', # Corrected model name for functionality
-        system_instruction=system_instruction
-    ).generate_content(input_text)
-    
-    # Using .text is a simpler and more robust way to handle the response
-    return api_response.text
+@st.cache_data(show_spinner=False)  # Suppress "Running generate_sanskrit_translation(...)" message
+def generate_sanskrit_translation(input_text, system_instruction):
+    api_response = client.models.generate_content(
+        model="gemini-2.5-pro",
+        config=types.GenerateContentConfig(system_instruction=system_instruction),
+        contents=input_text,
+    )
+    parts = api_response.candidates[0].content.parts
+    return "".join(part.text for part in parts)
+
+# Function to send email for usage logs
+def send_email(subject, body):
+    try:
+        msg = Text(body)
+        msg["Subject"] = subject
+        msg["From"] = EMAIL_SENDER
+        msg["To"] = EMAIL_RECEIVER
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
+        return True
+    except Exception as e:
+        st.error(f"Failed to send usage log email: {str(e)}")
+        return False
 
 # Process submission with validation, error handling, and progress bar
 if submitted:
-    # --- CHANGE: Added a check to ensure an API key is available ---
-    if not api_key_to_use:
-        st.error("Google API key not found. Please add your key in the sidebar or configure it in st.secrets.")
-    elif not input_text.strip():
+    if not input_text.strip():
         st.error("Please enter a valid news article.")
     else:
         try:
             with st.spinner("Generating Sanskrit translation... Please wait."):
-                # --- CHANGE: Pass the selected API key to the function ---
-                response = generate_sanskrit_translation(
-                    input_text, 
-                    st.session_state.system_instruction,
-                    api_key=api_key_to_use
-                )
+                response = generate_sanskrit_translation(input_text, st.session_state.system_instruction)
                 st.session_state.output = response
                 
+                # Log usage analytics
                 usage_log = f"Submission at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 st.session_state.usage_logs.append(usage_log)
+                #send_email("Sanskrit News Generator Usage Log", usage_log)
                 
+                # Display output in vertically scrollable box
                 st.markdown("### Output")
-                st.text_area("Generated Sanskrit Text", response, height=400)
+                st.markdown(
+                    f"""
+                    <div style="background-color: #f0f2f6; padding: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto; white-space: pre-wrap;">
+                        <pre>{response}</pre>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
                 
+                # Download button
                 st.download_button(
                     label="Download Output",
                     data=response,
@@ -158,3 +173,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
