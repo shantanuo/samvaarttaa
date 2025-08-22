@@ -6,7 +6,28 @@ import pyperclip
 
 
 # Initialize Google GenAI client
-client = genai.Client(api_key=st.secrets['google_key'])
+# client = genai.Client(api_key=st.secrets['google_key'])
+
+
+# 1. Add a sidebar input for the user's API key
+st.sidebar.title("Configuration")
+user_api_key = st.sidebar.text_input(
+    "Your Google API Key (Optional)",
+    type="password",
+    help="If you provide your own key, it will be used instead of the app's default key."
+)
+
+# 2. Determine which API key to use
+# If the user provides a key, use it. Otherwise, use the one from secrets.
+api_key_to_use = user_api_key if user_api_key else st.secrets.get('google_key')
+
+# 3. Initialize the Google GenAI client using the selected key
+# This will only succeed if api_key_to_use is not None.
+client = None
+if api_key_to_use:
+    if user_api_key:
+        st.sidebar.success("Using your provided API key.")
+    client = genai.Client(api_key=api_key_to_use)
 
 
 # System instruction (default)
