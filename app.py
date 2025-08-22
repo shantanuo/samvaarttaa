@@ -102,7 +102,7 @@ def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use
     ]
 
     model = genai.GenerativeModel(
-        model_name='gemini-2.5',
+        model_name='gemini-2.5-pro',
         system_instruction=system_instruction,
         safety_settings=safety_settings  # Apply the new safety settings
     )
