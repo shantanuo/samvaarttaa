@@ -90,19 +90,11 @@ with st.expander("View/Edit Prompt"):
 
 @st.cache_data(show_spinner=False)
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
-    """
-    Generates translation. This is the correct implementation.
-    """
-    # 1. Configure the library with the API key for this specific call.
     genai.configure(api_key=api_key_to_use)
-    
-    # 2. Create the model with the system instruction.
     model = genai.GenerativeModel(
         model_name='gemini-1.5-pro-latest',
         system_instruction=system_instruction
     )
-    
-    # 3. Generate the content.
     response = model.generate_content(input_text)
     return response.text
 
@@ -114,6 +106,10 @@ if submitted:
     elif not input_text.strip():
         st.error("Please enter a news article to translate.")
     else:
+        # --- CHANGE 1: Display the key being used BEFORE the API call ---
+        key_display_string = f"{api_key[:5]}...{api_key[-4:]}"
+        st.info(f"Attempting to generate text using API Key: {key_display_string}")
+
         try:
             with st.spinner("Generating Sanskrit translation... Please wait."):
                 response = generate_sanskrit_translation(
@@ -122,32 +118,23 @@ if submitted:
                     api_key_to_use=api_key
                 )
                 
-                # --- CHANGE IS HERE ---
-                # Create a display string for the API key to avoid showing the full key
-                key_display_string = f"DEBUG INFO: Key Used: {api_key[:5]}...{api_key[-4:]}"
-                
-                # Prepend the debug info to the response
-                final_output = f"{key_display_string}\n\n---\n\n{response}"
-                
-                # Display the combined output
                 st.markdown("### Output")
-                st.text_area("Generated Sanskrit Text", final_output, height=400)
-                
-                # Make the combined output available for download
+                st.text_area("Generated Sanskrit Text", response, height=400)
                 st.download_button(
                     label="Download Output",
-                    data=final_output,
+                    data=response,
                     file_name="sanskrit_translation.txt",
                     mime="text/plain"
                 )
-                # --- END OF CHANGE ---
 
         except Exception as e:
-            st.error(f"An error occurred while generating the translation: {str(e)}")
+            # --- CHANGE 2: Add the key to the error message for clarity ---
+            st.error(f"An error occurred while using key '{key_display_string}': {str(e)}")
+            
             if "api_key" in str(e).lower():
                  st.warning("The provided API key might be invalid. Please check the key in the sidebar or your secrets file.")
-            elif "rate limit" in str(e).lower():
-                st.warning("Rate limit exceeded. Please try again later or provide your own API key in the sidebar.")
+            elif "rate limit" in str(e).lower() or "quota" in str(e).lower():
+                st.warning(f"The API key '{key_display_string}' has exceeded its usage limit. Please try again later or provide your own personal API key in the sidebar.")
 
 # --- Footer ---
 st.markdown("---")
