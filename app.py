@@ -19,14 +19,12 @@ user_api_key = st.sidebar.text_input(
 
 # 2. Determine which API key to use
 # If the user provides a key, use it. Otherwise, use the one from secrets.
-api_key_to_use = user_api_key if user_api_key else st.secrets['google_key']
+api_key_to_use = user_api_key if user_api_key else 'AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig'
 
 # 3. Initialize the Google GenAI client using the selected key
 # This will only succeed if api_key_to_use is not None.
 client = None
 if api_key_to_use:
-    if user_api_key:
-        st.sidebar.success("Using your provided API key.")
     client = genai.Client(api_key=api_key_to_use)
 
 
