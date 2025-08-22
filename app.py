@@ -19,7 +19,7 @@ user_api_key = st.sidebar.text_input(
 
 st.write("DEBUG value:", repr(user_api_key))
 
-if user_api_key == ''
+if user_api_key == '':
     client = genai.Client(api_key='AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
 else:
     client = genai.Client(api_key=user_api_key)    
