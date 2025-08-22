@@ -2,6 +2,8 @@ import streamlit as st
 from google import genai
 from google.genai import types
 from datetime import datetime
+import pyperclip
+
 
 # Initialize Google GenAI client
 client = genai.Client(api_key=st.secrets['google_key'])
