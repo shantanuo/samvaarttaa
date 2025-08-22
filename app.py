@@ -91,12 +91,35 @@ with st.expander("View/Edit Prompt"):
 @st.cache_data(show_spinner=False)
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
     genai.configure(api_key=api_key_to_use)
+    
+    # --- FIX 2: Adjust safety settings to be less restrictive ---
+    # This allows the model to handle news topics that might contain sensitive words.
+    safety_settings = [
+        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+    ]
+
     model = genai.GenerativeModel(
-        model_name='gemini-2.5-pro',
-        system_instruction=system_instruction
+        model_name='gemini-1.5-pro-latest',
+        system_instruction=system_instruction,
+        safety_settings=safety_settings  # Apply the new safety settings
     )
+    
     response = model.generate_content(input_text)
-    return response.text
+    
+    # --- FIX 1: Make the code more robust to handle blocked responses ---
+    try:
+        return response.text
+    except ValueError:
+        # If .text fails, it means the response was blocked.
+        # We raise a more informative error that will be displayed to the user.
+        raise ValueError(
+            "The response was blocked by Google's safety filters. "
+            "This can happen with news articles containing sensitive topics. "
+            "Please try modifying the input text."
+        )
 
 # --- Form Submission Logic ---
 
@@ -106,29 +129,27 @@ if submitted:
     elif not input_text.strip():
         st.error("Please enter a news article to translate.")
     else:
-        # --- CHANGE 1: Display the key being used BEFORE the API call ---
         key_display_string = f"{api_key[:5]}...{api_key[-4:]}"
         st.info(f"Attempting to generate text using API Key: {key_display_string}")
 
         try:
             with st.spinner("Generating Sanskrit translation... Please wait."):
-                response = generate_sanskrit_translation(
+                response_text = generate_sanskrit_translation(
                     input_text, 
                     st.session_state.system_instruction, 
                     api_key_to_use=api_key
                 )
                 
                 st.markdown("### Output")
-                st.text_area("Generated Sanskrit Text", response, height=400)
+                st.text_area("Generated Sanskrit Text", response_text, height=400)
                 st.download_button(
                     label="Download Output",
-                    data=response,
+                    data=response_text,
                     file_name="sanskrit_translation.txt",
                     mime="text/plain"
                 )
 
         except Exception as e:
-            # --- CHANGE 2: Add the key to the error message for clarity ---
             st.error(f"An error occurred while using key '{key_display_string}': {str(e)}")
             
             if "api_key" in str(e).lower():
