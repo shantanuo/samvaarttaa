@@ -92,7 +92,7 @@ with st.expander("View/Edit Prompt"):
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
     genai.configure(api_key=api_key_to_use)
     model = genai.GenerativeModel(
-        model_name='gemini-2.5-pro-latest',
+        model_name='gemini-2.5-pro',
         system_instruction=system_instruction
     )
     response = model.generate_content(input_text)
