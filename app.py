@@ -1,6 +1,5 @@
 import streamlit as st
-from google import genai
-# No longer need 'glm' or 'types' for this implementation
+import google.generativeai as genai
 from datetime import datetime
 # import smtplib
 # from email.mime.text import MIMEText as Text
@@ -107,43 +106,22 @@ with st.expander("View/Edit Prompt"):
 @st.cache_data(show_spinner=False)
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
     """
-    Generates translation using the provided API key.
-    Initializes the model with the system instruction.
+    Generates translation using a specific API key by creating a temporary client.
+    This is a robust method that avoids issues with library versions.
     """
-    # Configure the genai library with the correct API key for this call
-    genai.configure(api_key=api_key_to_use)
-    
-    # Initialize the model with the system instruction
-    model = genai.GenerativeModel(
-        model_name='gemini-1.5-pro-latest',
+    # 1. Create a client instance with the specific key for this request.
+    client = genai.Client(api_key=api_key_to_use)
+
+    # 2. Get the generative model from the client, passing the system instruction.
+    model = client.get_generative_model(
+        model='gemini-1.5-pro-latest',
         system_instruction=system_instruction
     )
-    
-    # Generate content
+
+    # 3. Generate the content from the user's input.
     response = model.generate_content(input_text)
 
     return response.text
-
-# Function to send email for usage logs (Commented out as it's incomplete)
-# def send_email(subject, body):
-#     try:
-#         # These variables would need to be defined, e.g., in st.secrets
-#         EMAIL_SENDER = "your_email@gmail.com"
-#         EMAIL_PASSWORD = "your_password"
-#         EMAIL_RECEIVER = "receiver_email@gmail.com"
-#
-#         msg = Text(body)
-#         msg["Subject"] = subject
-#         msg["From"] = EMAIL_SENDER
-#         msg["To"] = EMAIL_RECEIVER
-#         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-#             server.login(EMAIL_SENDER, EMAIL_PASSWORD)
-#             server.sendmail(EMAIL_SENDER, EMAIL_RECEIVER, msg.as_string())
-#         return True
-#     except Exception as e:
-#         st.error(f"Failed to send usage log email: {str(e)}")
-#         return False
-
 
 # --- Form Submission Logic ---
 
@@ -167,7 +145,6 @@ if submitted:
                 # Log usage analytics
                 usage_log = f"Submission at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
                 st.session_state.usage_logs.append(usage_log)
-                # send_email("Sanskrit News Generator Usage Log", usage_log)
                 
                 # Display output in a text_area for better copy-paste and formatting
                 st.markdown("### Output")
@@ -183,7 +160,7 @@ if submitted:
         except Exception as e:
             st.error(f"An error occurred while generating the translation: {str(e)}")
             if "api_key" in str(e).lower():
-                 st.warning("The provided API key might be invalid. Please check the key in the sidebar.")
+                 st.warning("The provided API key might be invalid. Please check the key in the sidebar or your secrets file.")
             elif "rate limit" in str(e).lower():
                 st.warning("Rate limit exceeded. Please try again later. If you have your own API key, you can provide it in the sidebar.")
 
