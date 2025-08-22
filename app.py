@@ -1,7 +1,6 @@
 import streamlit as st
 from google import genai
-from google.ai import generativelanguage as glm
-from google.genai import types
+# No longer need 'glm' or 'types' for this implementation
 from datetime import datetime
 # import smtplib
 # from email.mime.text import MIMEText as Text
@@ -108,21 +107,20 @@ with st.expander("View/Edit Prompt"):
 @st.cache_data(show_spinner=False)
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
     """
-    Generates translation. Client is initialized here to ensure the correct
-    API key is used and caching works properly if the key changes.
+    Generates translation using the provided API key.
+    Initializes the model with the system instruction.
     """
-    client = genai.Client(api_key=api_key_to_use)
-    model = client.get_generative_model(model="gemini-1.5-pro-latest")
+    # Configure the genai library with the correct API key for this call
+    genai.configure(api_key=api_key_to_use)
     
-    # Using the new system_instruction parameter for gemini-1.5-pro
-    system_instruction_prompt = glm.Content(
-        parts=[glm.Part(text=system_instruction)],
-        role="system"
+    # Initialize the model with the system instruction
+    model = genai.GenerativeModel(
+        model_name='gemini-1.5-pro-latest',
+        system_instruction=system_instruction
     )
     
-    response = model.generate_content(
-        [system_instruction_prompt, input_text]
-    )
+    # Generate content
+    response = model.generate_content(input_text)
 
     return response.text
 
@@ -171,7 +169,7 @@ if submitted:
                 st.session_state.usage_logs.append(usage_log)
                 # send_email("Sanskrit News Generator Usage Log", usage_log)
                 
-                # Display output in vertically scrollable box
+                # Display output in a text_area for better copy-paste and formatting
                 st.markdown("### Output")
                 st.text_area("Generated Sanskrit Text", response, height=400)
                 
