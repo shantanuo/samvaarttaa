@@ -9,20 +9,24 @@ import pyperclip
 # client = genai.Client(api_key=st.secrets['google_key'])
 
 
-# 1. Add a sidebar input for the user's API key
-st.sidebar.title("Configuration")
-user_api_key = st.sidebar.text_input(
-    "Type Your Google API Key and hit enter key (Optional)",
-    key="user_api_key",
-    help="If you provide your own key, it will be used instead of the app's default key."
-)
-
-st.write("DEBUG value:", repr(user_api_key))
-
-if user_api_key == '':
-    client = genai.Client(api_key='AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
-else:
-    client = genai.Client(api_key=user_api_key)    
+try:
+    st.sidebar.title("Configuration")
+    user_api_key = st.sidebar.text_input(
+        "Type Your Google API Key and hit enter key (Optional)",
+        key="user_api_key",
+        help="If you provide your own key, it will be used instead of the app's default key."
+    )
+    
+    st.write("DEBUG value:", repr(user_api_key))
+    
+    if user_api_key == '':
+        client = genai.Client(api_key='AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
+    else:
+        client = genai.Client(api_key=user_api_key)    
+except Exception as e:
+    st.error("An error occurred!")
+    st.exception(e)  # shows full traceback in the app
+    
 
 # System instruction (default)
 default_system_instruction = """Rewrite this news article into classical Sanskrit without English punctuation 
