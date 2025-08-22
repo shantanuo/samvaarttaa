@@ -12,17 +12,17 @@ import pyperclip
 # 1. Add a sidebar input for the user's API key
 st.sidebar.title("Configuration")
 user_api_key = st.sidebar.text_input(
-    "Your Google API Key (Optional)",
+    "Type Your Google API Key and hit enter key (Optional)",
     key="user_api_key",
     help="If you provide your own key, it will be used instead of the app's default key."
 )
 
-st.write("DEBUG value:", repr(user_api_key))
+# st.write("DEBUG value:", repr(user_api_key))
 
 if user_api_key:
     client = genai.Client(api_key=user_api_key)
 else:
-    client = genai.Client(api_key='AAIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
+    client = genai.Client(api_key='AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
     
 
 # System instruction (default)
