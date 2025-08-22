@@ -13,6 +13,7 @@ import pyperclip
 st.sidebar.title("Configuration")
 user_api_key = st.sidebar.text_input(
     "Your Google API Key (Optional)",
+    key="user_api_key",
     help="If you provide your own key, it will be used instead of the app's default key."
 )
 
