@@ -1,8 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
 from datetime import datetime
-# import smtplib
-# from email.mime.text import MIMEText as Text
 
 # --- Configuration Section ---
 
@@ -46,14 +44,12 @@ Similarly write english name in devanagari with original name in brackets (e.g. 
 Provide just the translation without any other extra introductory text."""
 
 # Demo input
-DEMO_INPUT = """On July 19, 2025, CoinDCX, one of India’s largest crypto exchanges, suffered a major hack resulting in a loss of about $44.2 million. The breach targeted an internal wallet used by CoinDCX for liquidity with a partner exchange and did not affect any customer funds, which remain safe in cold storage. Blockchain investigators like ZachXBT uncovered the hack before CoinDCX made it public, noting the hacker used a sophisticated server-side attack and laundered the funds by moving them from Solana to Ethereum and using Tornado Cash. CoinDCX has drawn some criticism for a 17-hour delay in disclosing the breach, especially since the compromised wallet was not part of the exchange’s published proof-of-reserves. In response, the company froze all impacted systems, engaged third-party security experts, and has covered the losses using its own treasury to ensure normal trading and withdrawals. CEO Sumit Gupta assured users that all customer holdings are safe, and the company has launched a bug bounty to strengthen future security while cooperating with authorities. This incident, the second major Indian exchange hack within a year, has intensified scrutiny on how centralized crypto platforms handle security and crisis management."""
+DEMO_INPUT = """On July 19, 2025, CoinDCX, one of India’s largest crypto exchanges, suffered a major hack resulting in a loss of about $44.2 million. The breach targeted an internal wallet used by CoinDCX for liquidity with a partner exchange and did not affect any customer funds, which remain safe in cold storage. Blockchain investigators like ZachXBT uncovered the hack before CoinDCX made it public, noting the hacker used a a sophisticated server-side attack and laundered the funds by moving them from Solana to Ethereum and using Tornado Cash. CoinDCX has drawn some criticism for a 17-hour delay in disclosing the breach, especially since the compromised wallet was not part of the exchange’s published proof-of-reserves. In response, the company froze all impacted systems, engaged third-party security experts, and has covered the losses using its own treasury to ensure normal trading and withdrawals. CEO Sumit Gupta assured users that all customer holdings are safe, and the company has launched a bug bounty to strengthen future security while cooperating with authorities. This incident, the second major Indian exchange hack within a year, has intensified scrutiny on how centralized crypto platforms handle security and crisis management."""
 
 
 # --- Main Application UI ---
 
-# Input form
 with st.form("input_form"):
-    # Action buttons with icons above input box
     col1, col2 = st.columns([1, 1])
     with col1:
         if st.form_submit_button("❌ Clear"):
@@ -67,31 +63,22 @@ with st.form("input_form"):
         height=300,
         key="input_text"
     )
-    
     st.write(f"Input character count: {len(input_text)}")
     if len(input_text) > 5000:
         st.warning("Input is very long. Consider shortening it for better performance.")
 
     submitted = st.form_submit_button("Submit")
 
-# Collapsible disclaimers
 with st.expander("Disclaimers"):
-    st.markdown(
-        """
+    st.markdown("""
         * AI translation may contain errors or hallucinations. __*Always proofread*__ before publishing.
         * Generating the response *will* be slow. Please be patient!
-        * If using the default key, please note that this demo supports a limited number of requests and may be unavailable 
-        if too many people use the service. Thank you for your understanding.
-        """
-    )
+        * If using the default key, please note that this demo supports a limited number of requests and may be unavailable.
+    """)
 
-# Initialize session state for usage logs and system instruction
-if "usage_logs" not in st.session_state:
-    st.session_state.usage_logs = []
 if "system_instruction" not in st.session_state:
     st.session_state.system_instruction = default_system_instruction
 
-# Editable prompt
 with st.expander("View/Edit Prompt"):
     st.session_state.system_instruction = st.text_area(
         "System Instruction",
@@ -99,40 +86,33 @@ with st.expander("View/Edit Prompt"):
         height=200
     )
 
-
 # --- Backend Functions ---
 
-# Cache API responses
 @st.cache_data(show_spinner=False)
 def generate_sanskrit_translation(input_text, system_instruction, api_key_to_use):
     """
-    Generates translation using a specific API key by creating a temporary client.
-    This is a robust method that avoids issues with library versions.
+    Generates translation. This is the correct implementation.
     """
-    # 1. Create a client instance with the specific key for this request.
-    client = genai.Client(api_key=api_key_to_use)
-
-    # 2. Get the generative model from the client, passing the system instruction.
-    model = client.get_generative_model(
-        model='gemini-1.5-pro-latest',
+    # 1. Configure the library with the API key for this specific call.
+    genai.configure(api_key=api_key_to_use)
+    
+    # 2. Create the model with the system instruction.
+    model = genai.GenerativeModel(
+        model_name='gemini-1.5-pro-latest',
         system_instruction=system_instruction
     )
-
-    # 3. Generate the content from the user's input.
+    
+    # 3. Generate the content.
     response = model.generate_content(input_text)
-
     return response.text
 
 # --- Form Submission Logic ---
 
 if submitted:
-    # 1. Validate that an API key is available
     if not api_key:
-        st.error("Google API key not found. Please add it to your Streamlit secrets (`google_key`) or provide one in the sidebar to continue.")
-    # 2. Validate that the input text is not empty
+        st.error("Google API key not found. Please add it to your Streamlit secrets (`google_key`) or provide one in the sidebar.")
     elif not input_text.strip():
         st.error("Please enter a news article to translate.")
-    # 3. If all validations pass, proceed with generation
     else:
         try:
             with st.spinner("Generating Sanskrit translation... Please wait."):
@@ -142,15 +122,8 @@ if submitted:
                     api_key_to_use=api_key
                 )
                 
-                # Log usage analytics
-                usage_log = f"Submission at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                st.session_state.usage_logs.append(usage_log)
-                
-                # Display output in a text_area for better copy-paste and formatting
                 st.markdown("### Output")
                 st.text_area("Generated Sanskrit Text", response, height=400)
-                
-                # Download button
                 st.download_button(
                     label="Download Output",
                     data=response,
@@ -162,8 +135,7 @@ if submitted:
             if "api_key" in str(e).lower():
                  st.warning("The provided API key might be invalid. Please check the key in the sidebar or your secrets file.")
             elif "rate limit" in str(e).lower():
-                st.warning("Rate limit exceeded. Please try again later. If you have your own API key, you can provide it in the sidebar.")
-
+                st.warning("Rate limit exceeded. Please try again later or provide your own API key in the sidebar.")
 
 # --- Footer ---
 st.markdown("---")
