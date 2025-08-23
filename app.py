@@ -17,7 +17,7 @@ try:
         help="If you provide your own key, it will be used instead of the app's default key."
     )
     
-    st.write("DEBUG value:", repr(user_api_key))
+#    st.write("DEBUG value:", repr(user_api_key))
     
     if user_api_key == '':
         client = genai.Client(api_key=st.secrets['google_key'])
