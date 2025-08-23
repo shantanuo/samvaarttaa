@@ -20,7 +20,7 @@ try:
     st.write("DEBUG value:", repr(user_api_key))
     
     if user_api_key == '':
-        client = genai.Client(api_key='AIzaSyA1rwfVqEre-W0EpMi0TZ396T0y21jbPig')
+        client = genai.Client(api_key=st.secrets['google_key'])
     else:
         client = genai.Client(api_key=user_api_key)    
 except Exception as e:
