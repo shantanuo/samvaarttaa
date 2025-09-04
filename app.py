@@ -20,8 +20,10 @@ try:
 #    st.write("DEBUG value:", repr(user_api_key))
     
     if user_api_key == '':
+        key_used = st.secrets['google_key']
         client = genai.Client(api_key=st.secrets['google_key'])
     else:
+        key_used = user_api_key
         client = genai.Client(api_key=user_api_key)    
 except Exception as e:
     st.error("An error occurred!")
@@ -153,7 +155,7 @@ def generate_sanskrit_translation(input_text, system_instruction):
         st.error("An error occurred!")
         st.exception(e)  # shows full traceback in the app
 
-    return "".join(part.text for part in parts) + ' \n \n From: ' + api_response.model_version + ' \n \n API Key: ' + st.secrets['google_key']
+    return ' \n From: ' + api_response.model_version + ' \n API Key: ' + st.secrets['google_key'] + '\n ' + "".join(part.text for part in parts)
 
 # Function to send email for usage logs
 def send_email(subject, body):
