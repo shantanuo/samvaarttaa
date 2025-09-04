@@ -151,6 +151,8 @@ def generate_sanskrit_translation(input_text, system_instruction):
             contents=input_text,
         )
         parts = api_response.candidates[0].content.parts
+        st.session_state.model_name = api_response.model_version
+
     except Exception as e:
         st.error("An error occurred!")
         st.exception(e)  # shows full traceback in the app
@@ -211,7 +213,10 @@ if submitted:
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
 
 
-#st.write("From:", api_response.model_version)
+
+if "model_name" in st.session_state:   # check to avoid KeyError
+    st.write("From:", st.session_state.model_name)
+
 st.write("API Key:", key_used[:-1] + "*" )
 
 # Feedback request
