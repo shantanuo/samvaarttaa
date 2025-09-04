@@ -155,7 +155,7 @@ def generate_sanskrit_translation(input_text, system_instruction):
         st.error("An error occurred!")
         st.exception(e)  # shows full traceback in the app
 
-    return 'From: ' + api_response.model_version + ' \n API Key: ' + key_used + '\n \n ' + "".join(part.text for part in parts)
+    return "".join(part.text for part in parts)
 
 # Function to send email for usage logs
 def send_email(subject, body):
@@ -210,6 +210,9 @@ if submitted:
             if "rate limit" in str(e).lower():
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
 
+
+st.write("From:", api_response.model_version)
+st.write("API Key:", key_used[:-1] + "*" )
 
 # Feedback request
 st.markdown("---")
