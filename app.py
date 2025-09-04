@@ -211,7 +211,7 @@ if submitted:
                 st.warning("Rate limit exceeded. Please try again later, as this demo supports a limited number of requests.")
 
 
-st.write("From:", api_response.model_version)
+#st.write("From:", api_response.model_version)
 st.write("API Key:", key_used[:-1] + "*" )
 
 # Feedback request
