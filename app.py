@@ -155,7 +155,7 @@ def generate_sanskrit_translation(input_text, system_instruction):
         st.error("An error occurred!")
         st.exception(e)  # shows full traceback in the app
 
-    return ' \n From: ' + api_response.model_version + ' \n API Key: ' + st.secrets['google_key'] + '\n ' + "".join(part.text for part in parts)
+    return 'From: ' + api_response.model_version + ' \n API Key: ' + key_used + '\n \n ' + "".join(part.text for part in parts)
 
 # Function to send email for usage logs
 def send_email(subject, body):
