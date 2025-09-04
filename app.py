@@ -217,7 +217,7 @@ if submitted:
 if "model_name" in st.session_state:   # check to avoid KeyError
     st.write("From:", st.session_state.model_name)
 
-st.write("API Key:", key_used[:-1] + "*" )
+st.write("API Key:", key_used[:-4] + "*" )
 
 # Feedback request
 st.markdown("---")
