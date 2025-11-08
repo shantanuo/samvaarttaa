@@ -163,7 +163,7 @@ with st.form("input_form"):
     )
     
     input_text = st.text_area(
-        "Enter a detailed news article for best results or click ⍰ for sample text  **_Always proofread before publishing_**.",
+        "Enter a detailed news article for best results or click ⍰ for sample text.  **_Always proofread before publishing_**.",
         height=300,
         key="input_text"
     )
