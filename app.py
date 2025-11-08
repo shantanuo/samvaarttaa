@@ -131,15 +131,6 @@ st.title("Sanskrit News Generator")
 # Input form (moved to top)
 with st.form("input_form"):
     # Action buttons with icons above input box (Paste button removed)
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        if st.form_submit_button("🅇"):
-            st.session_state.input_text = ""
-    with col2:
-        if st.form_submit_button("⍰"):
-            st.session_state.input_text = DEMO_INPUT
-
-
 
     st.markdown("""
     <style>
@@ -168,15 +159,6 @@ with st.form("input_form"):
             <button name="demo" type="submit">⍰</button>
         </div>
         """,
-        unsafe_allow_html=True
-    )
-
-
-    st.markdown(
-        '<div style="display: flex; gap: 6px;">'
-        '<button name="clear" type="submit">🅇</button>'
-        '<button name="demo" type="submit">⍰</button>'
-        '</div>',
         unsafe_allow_html=True
     )
     
