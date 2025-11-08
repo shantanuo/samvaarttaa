@@ -140,6 +140,38 @@ with st.form("input_form"):
             st.session_state.input_text = DEMO_INPUT
 
 
+
+    st.markdown("""
+    <style>
+    .custom-buttons {
+        display: flex;
+        gap: 6px;                 /* space between buttons */
+    }
+    .custom-buttons button {
+        background-color: #f0f2f6; /* Streamlit default button color */
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 0.4rem 0.8rem;
+        cursor: pointer;
+        font-size: 1.1rem;
+    }
+    .custom-buttons button:hover {
+        background-color: #e0e0e0;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown(
+        """
+        <div class="custom-buttons">
+            <button name="clear" type="submit">🅇</button>
+            <button name="demo" type="submit">⍰</button>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
     st.markdown(
         '<div style="display: flex; gap: 6px;">'
         '<button name="clear" type="submit">🅇</button>'
