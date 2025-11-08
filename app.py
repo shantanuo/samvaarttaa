@@ -134,9 +134,12 @@ with st.form("input_form"):
 
     col1, col2 = st.columns([1, 1])
     with col1:
-        clear_btn = st.form_submit_button("🅇")
+        if st.form_submit_button("🅇"):
+            st.session_state.input_text = ""
     with col2:
-        demo_btn = st.form_submit_button("⍰")
+        if st.form_submit_button("⍰"):
+            st.session_state.input_text = DEMO_INPUT
+
     
     input_text = st.text_area(
         "Enter a detailed news article for best results or click ⍰ for sample text.  **_Always proofread before publishing_**.",
