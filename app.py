@@ -132,52 +132,11 @@ st.title("Sanskrit News Generator")
 with st.form("input_form"):
     # Action buttons with icons above input box (Paste button removed)
 
-    st.markdown("""
-    <style>
-    /* Reduce spacing between Streamlit columns */
-    div[data-testid="column"] {
-        padding-right: 0.2rem !important;
-        padding-left: 0.2rem !important;
-    }
-    
-    /* Style Streamlit buttons to look compact and consistent */
-    div.stButton > button {
-        background-color: #f0f2f6;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 0.4rem 0.8rem;
-        cursor: pointer;
-        font-size: 1.1rem;
-    }
-    div.stButton > button:hover {
-        background-color: #e0e0e0;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    st.markdown(
-        """
-        <div class="custom-buttons">
-            <button name="clear" type="submit">🅇</button>
-            <button name="demo" type="submit">⍰</button>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
     col1, col2 = st.columns([1, 1])
     with col1:
         clear_btn = st.form_submit_button("🅇")
     with col2:
         demo_btn = st.form_submit_button("⍰")
-
-    # Handle button clicks
-    if clear_btn:
-        st.session_state.input_text = ""
-    if demo_btn:
-        st.session_state.input_text = DEMO_INPUT
-
     
     input_text = st.text_area(
         "Enter a detailed news article for best results or click ⍰ for sample text.  **_Always proofread before publishing_**.",
