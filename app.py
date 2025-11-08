@@ -139,6 +139,15 @@ with st.form("input_form"):
         if st.form_submit_button("⍰"):
             st.session_state.input_text = DEMO_INPUT
 
+
+    st.markdown(
+        '<div style="display: flex; gap: 6px;">'
+        '<button name="clear" type="submit">🅇</button>'
+        '<button name="demo" type="submit">⍰</button>'
+        '</div>',
+        unsafe_allow_html=True
+    )
+    
     input_text = st.text_area(
         "Enter a detailed news article for best results or click ⍰ for sample text  **_Always proofread before publishing_**.",
         height=300,
