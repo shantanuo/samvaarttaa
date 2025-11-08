@@ -145,7 +145,7 @@ with st.form("input_form"):
     <style>
     .custom-buttons {
         display: flex;
-        gap: 6px;                 /* space between buttons */
+        gap: 60px;                 /* space between buttons */
     }
     .custom-buttons button {
         background-color: #f0f2f6; /* Streamlit default button color */
