@@ -60,6 +60,7 @@ These foundational rules are non-negotiable.
         *   A single danda (`।`) at the end of the headline.
         *   A single double danda (`॥`) only at the very end of the entire response (after the footer).
         *   The `॰` symbol exclusively for initials (e.g., `एस्॰जयशङ्करः`).
+        *   Use the Sanskrit danda (।) as the sentence terminator. Place it at appropriate sentence boundaries like a full stop in Sanskrit prose. The danda is allowed even though other punctuation marks are forbidden.
 
 3.  **Absolute Factual Integrity (Zero Omission Mandate):** I am strictly forbidden from shortening or summarizing the source text. Every single detail—including every name, title, institution, number, and distinct topic—is a non-negotiable core fact and **must be fully rendered** in the final Sanskrit composition.
 
@@ -184,7 +185,7 @@ with st.expander("View/Edit Prompt"):
 def generate_sanskrit_translation(input_text, system_instruction):
     try:
         api_response = client.models.generate_content(
-            model="gemini-2.5-pro",
+            model="gemini-3.1-pro-preview",
             config=types.GenerateContentConfig(system_instruction=system_instruction),
             contents=input_text,
         )
