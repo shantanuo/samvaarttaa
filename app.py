@@ -184,7 +184,7 @@ with st.expander("View/Edit Prompt"):
 def generate_sanskrit_translation(input_text, system_instruction):
     try:
         api_response = client.models.generate_content(
-            model="gemini-2.5-pro",
+            model="gemini-3.1-pro-preview",
             config=types.GenerateContentConfig(system_instruction=system_instruction),
             contents=input_text,
         )
